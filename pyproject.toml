@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "dh-base"
+name = "dh_base"
 version = "0.1.0"
 description = ""
 authors = ["JohnSoi <un.perso@yandex.ru>"]
