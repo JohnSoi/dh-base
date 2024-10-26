@@ -30,7 +30,7 @@
 
 Для подключения используется команда:
 ```bash
-poetry add git+https://github.com/JohnSoi/dh_base.git
+poetry add git+https://github.com/JohnSoi/dh-base.git
 ```
 
 Далее необходима настроить базовы репозиторий. Для этого в корне проекта создается файл ```base_class.py``` со следующим содержимым:
