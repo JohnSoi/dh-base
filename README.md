@@ -33,6 +33,18 @@
 poetry add git+https://github.com/JohnSoi/dh-base.git
 ```
 
-Далее необходима настроить базовы репозиторий. Для этого в корне проекта создается файл ```base_class.py``` со следующим содержимым:
+Далее необходима настроить базовый репозиторий. Для этого в корне проекта создается файл ```base_class.py``` со следующим содержимым:
+```python
+from dh_base.repositories import BaseRepository as PlatformBaseREpositories
+from dh_autoservice.database import async_session_maker, sync_session_maker
 
+class BaseRepository(PlatformBaseREpositories):
+    @property
+    def async_session_maker(self) -> async_sessionmaker[AsyncSession]:
+        return async_session_maker
+
+    @property
+    def sync_session_maker(self) -> sessionmaker[Session]:
+        return sync_session_maker
+```
 
