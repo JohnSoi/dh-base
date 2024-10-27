@@ -7,26 +7,16 @@ from uuid import uuid4
 
 from sqlalchemy import Select, select, Delete, delete, Update, Insert
 from sqlalchemy.exc import InvalidRequestError
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
-from sqlalchemy.orm import sessionmaker, DeclarativeMeta, Session
+from sqlalchemy.orm import DeclarativeMeta
 
 from .exceptions import EntityNotFount
+from ..database import async_session_maker, sync_session_maker
 
 
 class BaseRepository(ABC):
     """Базовый репозиторий"""
     _DESC: bool = True
     _SEARCH_FIELD: str | None = None
-
-    @property
-    @abstractmethod
-    def async_session_maker(self) -> async_sessionmaker[AsyncSession]:
-        """Для работы асинхронных сессий"""
-
-    @property
-    @abstractmethod
-    def sync_session_maker(self) -> sessionmaker[Session]:
-        """Для работы синхронных сессий"""
 
     @property
     @abstractmethod
@@ -45,7 +35,7 @@ class BaseRepository(ABC):
         :param entity_id: идентификатор записи
         :return: запись или None
         """
-        async with self.async_session_maker() as async_session:
+        async with async_session_maker() as async_session:
             query: Select = select(self.model).where(self.model.id == entity_id)
             result = await async_session.execute(query)
 
@@ -71,7 +61,7 @@ class BaseRepository(ABC):
         return entity
 
     def sync_create(self, payload):
-        with self.sync_session_maker() as async_session:
+        with sync_session_maker() as async_session:
             with async_session.begin():
                 new_entity: DeclarativeMeta = self.model()
 
@@ -91,7 +81,7 @@ class BaseRepository(ABC):
     async def create(self, payload: Dict[str, Any]) -> DeclarativeMeta:
         """Создание записи по данным"""
         try:
-            async with self.async_session_maker() as async_session:
+            async with async_session_maker() as async_session:
                 async with async_session.begin():
                     new_entity: DeclarativeMeta = self.model()
 
@@ -139,7 +129,7 @@ class BaseRepository(ABC):
 
         sort_field = getattr(self.model, self.ordering_field_name)
         query = query.order_by(sort_field.desc() if self._DESC else sort_field.asc())
-        async with self.async_session_maker() as async_session:
+        async with async_session_maker() as async_session:
             temp_result = await async_session.execute(query)
 
             if not temp_result:
@@ -170,7 +160,7 @@ class BaseRepository(ABC):
             entity.date_update = datetime.now()
 
         try:
-            async with self.async_session_maker() as async_session:
+            async with async_session_maker() as async_session:
                 async with async_session.begin():
                     async_session.add(entity)
 
@@ -192,7 +182,7 @@ class BaseRepository(ABC):
         entity: DeclarativeMeta = await self.get_with_check(entity_id)
         self._before_delete(entity)
 
-        async with self.async_session_maker() as async_session:
+        async with async_session_maker() as async_session:
             if hasattr(entity, 'date_delete'):
                 if entity.date_delete:
                     query: Delete = delete(self.model).where(self.model.id == entity_id)
@@ -214,7 +204,7 @@ class BaseRepository(ABC):
         @param query: запрос
         @return: результат
         """
-        async with self.async_session_maker() as async_session:
+        async with async_session_maker() as async_session:
             await async_session.execute(query)
 
     async def find_one_or_none(self, **filter_by):
@@ -224,7 +214,7 @@ class BaseRepository(ABC):
         @param filter_by: фильтры
         @return: модель или None
         """
-        async with self.async_session_maker() as async_session:
+        async with async_session_maker() as async_session:
             query = select(self.model).filter_by(**filter_by)
             result = await async_session.execute(query)
 

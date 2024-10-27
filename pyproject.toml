@@ -13,6 +13,9 @@ sqlalchemy = "^2.0.36"
 psycopg2 = "^2.9.10"
 alembic = "^1.13.3"
 
+[tool.poetry.group.dev.dependencies]
+setuptools = "^75.2.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

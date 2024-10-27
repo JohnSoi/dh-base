@@ -5,7 +5,7 @@ __author__: str = 'Старков Е.П.'
 
 from fastapi import status
 
-from exceptions import BaseAppException
+from ..exceptions import BaseAppException
 
 
 class EntityNotFount(BaseAppException):
