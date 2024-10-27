@@ -6,7 +6,7 @@ from sqlalchemy import NullPool
 
 __author__: str = 'Старков Е.П.'
 
-T_MODE_TYPE: Type[Literal] = Literal['DEV', 'TEST', 'PROD']
+T_MODE_TYPE = Literal['DEV', 'TEST', 'PROD']
 
 
 class DBSettings:
