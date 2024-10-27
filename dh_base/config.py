@@ -65,6 +65,8 @@ class Settings(DBSettings, BaseSettings):
     REDIS_PREFIX: str
     # Название приложения
     APP_NAME: str
+    # Токен доступа к HAWK
+    HAWK_TOKEN: str
 
     @property
     def is_dev(self) -> bool:

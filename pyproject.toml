@@ -13,6 +13,8 @@ sqlalchemy = "^2.0.36"
 psycopg2 = "^2.9.10"
 alembic = "^1.13.3"
 asyncpg = "^0.30.0"
+python-json-logger = "^2.0.7"
+hawkcatcher = "^3.4.1"
 
 [tool.poetry.group.dev.dependencies]
 setuptools = "^75.2.0"
