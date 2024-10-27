@@ -83,7 +83,7 @@ class Settings(DBSettings, BaseSettings):
     @property
     def db_connection_url_sync(self) -> str:
         """Строка синхронного подключения к БД с драйвером и СУБД"""
-        return f'postgresql+psycopg2://{self._connection_url}'
+        return f'postgresql+psycopg2://{self.get_db_connection_url(self.MODE)}'
 
     @property
     def database_connection_extra_params(self) -> dict[str, Type[NullPool]]:

@@ -12,6 +12,7 @@ pydantic-settings = "^2.6.0"
 sqlalchemy = "^2.0.36"
 psycopg2 = "^2.9.10"
 alembic = "^1.13.3"
+asyncpg = "^0.30.0"
 
 [tool.poetry.group.dev.dependencies]
 setuptools = "^75.2.0"
