@@ -14,5 +14,8 @@ class BaseAppException(HTTPException):
     DETAIL: str | None
 
     def __init__(self):
-        hawk.send(RuntimeError, {'code': self.STATUS_CODE, 'detail': self.DETAIL, 'http_exception': True})
+        try:
+            raise super().__init__(status_code=self.STATUS_CODE, detail=self.DETAIL)
+        except RuntimeError:
+            hawk.send()
         super().__init__(status_code=self.STATUS_CODE, detail=self.DETAIL)
