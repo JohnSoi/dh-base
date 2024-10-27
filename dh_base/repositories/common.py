@@ -11,6 +11,7 @@ from sqlalchemy.orm import DeclarativeMeta
 
 from ..database import sync_session_maker, async_session_maker
 from .exceptions import EntityNotFount
+from ..schemas import NavigationSchema
 
 
 class BaseRepository(ABC):
@@ -103,7 +104,7 @@ class BaseRepository(ABC):
             raise
 
     async def list(
-        self, filters: Dict[str, Any], navigation: Dict[str, int | bool] | None = None
+        self, filters: Dict[str, Any], navigation: NavigationSchema | None = None
     ) -> List[DeclarativeMeta]:
         """
         Список сущностей с применением фильтрации и навигации
@@ -115,8 +116,8 @@ class BaseRepository(ABC):
         query: Select = select(self.model)
 
         if navigation:
-            page_size: int = navigation.get("pageSize", 0)
-            offset: int = navigation.get("page", 0) * page_size
+            page_size: int = navigation.size
+            offset: int = navigation.page * page_size
             query = query.limit(page_size).offset(offset)
 
         if filters and filters.get("search_str") and self._SEARCH_FIELD:
