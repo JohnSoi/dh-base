@@ -1,20 +1,21 @@
 # pylint: disable=unnecessary-pass
 """Модуль базового репозитория"""
 from abc import ABC, abstractmethod
-from datetime import datetime
-from typing import Dict, Any, List
 from uuid import uuid4
+from typing import Any, Dict, List
+from datetime import datetime
 
-from sqlalchemy import Select, select, Delete, delete, Update, Insert
+from sqlalchemy import Delete, Insert, Select, Update, delete, select
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm import DeclarativeMeta
 
+from ..database import sync_session_maker, async_session_maker
 from .exceptions import EntityNotFount
-from ..database import async_session_maker, sync_session_maker
 
 
 class BaseRepository(ABC):
     """Базовый репозиторий"""
+
     _DESC: bool = True
     _SEARCH_FIELD: str | None = None
 
@@ -102,9 +103,7 @@ class BaseRepository(ABC):
             raise
 
     async def list(
-            self,
-            filters: Dict[str, Any],
-            navigation: Dict[str, int | bool] | None = None
+        self, filters: Dict[str, Any], navigation: Dict[str, int | bool] | None = None
     ) -> List[DeclarativeMeta]:
         """
         Список сущностей с применением фильтрации и навигации
@@ -116,14 +115,12 @@ class BaseRepository(ABC):
         query: Select = select(self.model)
 
         if navigation:
-            page_size: int = navigation.get('pageSize', 0)
-            offset: int = navigation.get('page', 0) * page_size
+            page_size: int = navigation.get("pageSize", 0)
+            offset: int = navigation.get("page", 0) * page_size
             query = query.limit(page_size).offset(offset)
 
-        if filters and filters.get('search_str') and self._SEARCH_FIELD:
-            query = query.where(
-                getattr(self.model, self._SEARCH_FIELD).ilike(f'%{filters.get("search_str")}%')
-            )
+        if filters and filters.get("search_str") and self._SEARCH_FIELD:
+            query = query.where(getattr(self.model, self._SEARCH_FIELD).ilike(f'%{filters.get("search_str")}%'))
 
         query = self._before_list(query, filters)
 
@@ -156,7 +153,7 @@ class BaseRepository(ABC):
             if hasattr(entity, key):
                 setattr(entity, key, new_entity_data[key])
 
-        if hasattr(entity, 'date_update'):
+        if hasattr(entity, "date_update"):
             entity.date_update = datetime.now()
 
         try:
@@ -183,14 +180,12 @@ class BaseRepository(ABC):
         self._before_delete(entity)
 
         async with async_session_maker() as async_session:
-            if hasattr(entity, 'date_delete'):
+            if hasattr(entity, "date_delete"):
                 if entity.date_delete:
                     query: Delete = delete(self.model).where(self.model.id == entity_id)
                     await async_session.execute(query)
                 else:
-                    await self.update(entity_id, {
-                        'date_delete': datetime.now(), 'is_active': False
-                    })
+                    await self.update(entity_id, {"date_delete": datetime.now(), "is_active": False})
             else:
                 query: Delete = delete(self.model).where(self.model.id == entity_id)
                 await async_session.execute(query)
@@ -250,11 +245,7 @@ class BaseRepository(ABC):
         return query
 
     @staticmethod
-    def _after_list(
-            result: List[DeclarativeMeta],
-            filters: Dict[str, Any],
-            navigation: Dict[str, int] | None
-    ) -> None:
+    def _after_list(result: List[DeclarativeMeta], filters: Dict[str, Any], navigation: Dict[str, int] | None) -> None:
         """
         Обработка результата списка
 
@@ -312,15 +303,15 @@ class BaseRepository(ABC):
     @staticmethod
     def _fill_main_fields(new_entity: DeclarativeMeta) -> None:
         """Заполнение стандартных полей при наличии"""
-        if hasattr(new_entity, 'id'):
+        if hasattr(new_entity, "id"):
             new_entity.id = None
-        if hasattr(new_entity, 'date_create'):
+        if hasattr(new_entity, "date_create"):
             new_entity.date_create = datetime.now()
-        if hasattr(new_entity, 'date_update'):
+        if hasattr(new_entity, "date_update"):
             new_entity.date_update = datetime.now()
-        if hasattr(new_entity, 'date_delete'):
+        if hasattr(new_entity, "date_delete"):
             new_entity.date_delete = None
-        if hasattr(new_entity, 'uuid'):
+        if hasattr(new_entity, "uuid"):
             new_entity.uuid = uuid4()
-        if hasattr(new_entity, 'is_active'):
+        if hasattr(new_entity, "is_active"):
             new_entity.is_active = True
