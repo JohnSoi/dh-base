@@ -1,6 +1,7 @@
 """Модуль конфигов приложения"""
 from typing import Literal, Type
 
+from pydantic import Extra
 from pydantic_settings import BaseSettings
 from sqlalchemy import NullPool
 
@@ -47,6 +48,7 @@ class Settings(DBSettings, BaseSettings):
     class Config:
         """Конфигурация"""
         env_file: str = '.env'
+        extra = Extra.forbid
 
     # Режим работы приложения
     MODE: T_MODE_TYPE
