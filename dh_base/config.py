@@ -51,6 +51,13 @@ class Settings(DBSettings, BaseSettings):
     # Режим работы приложения
     MODE: T_MODE_TYPE
 
+    # Хост редиса
+    REDIS_URL: str
+    # Префикс задач редиса
+    REDIS_PREFIX: str
+    # Название приложения
+    APP_NAME: str
+
     @property
     def is_dev(self) -> bool:
         """Признак стенда для разработки"""

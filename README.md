@@ -37,6 +37,10 @@ poetry add git+https://github.com/JohnSoi/dh-base.git
 ```dotenv
 MODE=
 
+REDIS_URL=
+REDIS_PREFIX=
+APP_NAME=
+
 DEV_DB_HOST=
 DEV_DB_NAME=
 DEV_DB_LOGIN=
