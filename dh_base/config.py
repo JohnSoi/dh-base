@@ -67,6 +67,8 @@ class Settings(DBSettings, BaseSettings):
     APP_NAME: str
     # Токен доступа к HAWK
     HAWK_TOKEN: str
+    # Уровень логирования
+    LOG_LEVEL: Literal['DEBUG', 'INFO', 'WARNING', 'ERROR']
 
     @property
     def is_dev(self) -> bool:
