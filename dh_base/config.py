@@ -54,7 +54,7 @@ class Settings(DBSettings, BaseSettings):
         """Конфигурация"""
 
         env_file: str = ".env"
-        extra = Extra.allow
+        extra = Extra.ignore
 
     # Режим работы приложения
     MODE: T_MODE_TYPE
