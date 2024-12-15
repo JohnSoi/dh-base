@@ -33,18 +33,32 @@
 poetry add git+https://github.com/JohnSoi/dh-base.git
 ```
 
-Далее необходима настроить базовый репозиторий. Для этого в корне проекта создается файл ```base_class.py``` со следующим содержимым:
-```python
-from dh_base.repositories import BaseRepository as PlatformBaseREpositories
-from dh_autoservice.database import async_session_maker, sync_session_maker
+В файле ```.env``` должны быть следующие поля:
+```dotenv
+MODE=
 
-class BaseRepository(PlatformBaseREpositories):
-    @property
-    def async_session_maker(self) -> async_sessionmaker[AsyncSession]:
-        return async_session_maker
+REDIS_URL=
+REDIS_PREFIX=
+APP_NAME=
 
-    @property
-    def sync_session_maker(self) -> sessionmaker[Session]:
-        return sync_session_maker
+DEV_DB_HOST=
+DEV_DB_NAME=
+DEV_DB_LOGIN=
+DEV_DB_PASSWORD=
+DEV_DB_PORT=
+
+TEST_DB_HOST=
+TEST_DB_NAME=
+TEST_DB_LOGIN=
+TEST_DB_PASSWORD=
+TEST_DB_PORT=
+
+PROD_DB_HOST=
+PROD_DB_NAME=
+PROD_DB_LOGIN=
+PROD_DB_PASSWORD=
+PROD_DB_PORT=
+
+HAWK_TOKEN=
+LOG_LEVEL=
 ```
-
