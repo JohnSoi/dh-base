@@ -145,7 +145,7 @@ class BaseRepository(ABC):
             if not temp_result:
                 return []
 
-            result = list(temp_result.scalars().all())
+            result = list(temp_result.unique().scalars().all())
             self._after_list(result, filters, navigation)
 
         return result
