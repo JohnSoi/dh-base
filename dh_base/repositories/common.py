@@ -123,7 +123,7 @@ class BaseRepository(ABC):
         if filters and filters.get("search_str") and self._SEARCH_FIELD:
             query = query.where(getattr(self.model, self._SEARCH_FIELD).ilike(f'%{filters.get("search_str")}%'))
 
-        query = self._before_list(query, filters)
+        query = await self._before_list(query, filters)
 
         sort_field = getattr(self.model, self.ordering_field_name)
         query = query.order_by(sort_field.desc() if self._DESC else sort_field.asc())
@@ -133,7 +133,7 @@ class BaseRepository(ABC):
             if not temp_result:
                 return []
 
-            result = list(temp_result.scalars().all())
+            result = list(temp_result.unique().scalars().all())
             self._after_list(result, filters, navigation)
 
         return result
@@ -235,7 +235,7 @@ class BaseRepository(ABC):
         pass
 
     @staticmethod
-    def _before_list(query: Select, _: Dict[str, Any]) -> Select:
+    async def _before_list(query: Select, _: Dict[str, Any]) -> Select:
         """
         Применение фильтров
 
