@@ -69,6 +69,8 @@ class Settings(DBSettings, BaseSettings):
     HAWK_TOKEN: str
     # Уровень логирования
     LOG_LEVEL: Literal['DEBUG', 'INFO', 'WARNING', 'ERROR']
+    # Доступ к хостингу RABBIT MQ
+    RABBIT_MQ_HOST: str
 
     @property
     def is_dev(self) -> bool:

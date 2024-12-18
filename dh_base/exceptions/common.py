@@ -4,7 +4,7 @@ __author__: str = "Старков Е.П."
 
 
 from fastapi import HTTPException, status
-from .logger import hawk
+from dh_base.logger import hawk
 
 
 class BaseAppException(HTTPException):
