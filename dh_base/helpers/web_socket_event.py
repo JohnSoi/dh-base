@@ -3,7 +3,7 @@ from typing import Dict, Any
 
 from fastapi import WebSocket
 
-from step_education.exceptions import NotConnectedSocket, ErrorEventName
+from dh_base.exceptions import NotConnectedSocket, ErrorEventName
 
 
 class WebSocketConnectionManager:

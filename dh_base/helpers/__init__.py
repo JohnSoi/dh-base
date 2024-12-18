@@ -1,2 +1,2 @@
 from .rabbit_events import RabbitEventHelper
-from .web_socket_event import WebSocketConnectionManager
+from .web_socket_event import WebSocketConnectionManager, manager as web_socket_connection_manager
